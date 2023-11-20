@@ -31,11 +31,11 @@ async function deleteSale(id: number) {
   })
 }
 
-async function updateSale(id: number, date: string, value: number) {
+async function updateSale(id: number, dateFormated: string, value: number) {
   return prisma.sales.update({
     where: {id},
     data: {
-      date,
+      date: dateFormated,
       value
     }
   })

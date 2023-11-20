@@ -20,10 +20,10 @@ async function deleteSale(id: number) {
 async function updateSale(id: number, date: Date, value: number) {
   const salesExists = await salesRepository.getSaleById(id);
   if (!salesExists) throw notFoundError();
-
+  
   const dateFormated = dayjs(date).format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
   const updatedSale = await salesRepository.updateSale(id, dateFormated, value);
-  return updateSale;
+  return updatedSale;
 }
 
 const salesService = {

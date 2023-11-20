@@ -26,6 +26,7 @@ async function deleteSale(req: Request, res: Response) {
   try {
     const saleId =  parseInt(req.params.id)
     const sale = await salesService.deleteSale(saleId);
+    return res.sendStatus(httpStatus.OK);
   } catch (error: any) {
     if (error.name === "NotFoundError") {
       return res.status(httpStatus.NOT_FOUND).send(error.message);
@@ -39,10 +40,12 @@ async function updateSale(req: Request, res: Response) {
     const saleId =  parseInt(req.params.id)
     const { date, value } = req.body
     const sale = await salesService.updateSale(saleId, date, value);
+    return res.status(httpStatus.OK).send(sale)
   } catch (error: any) {
     if (error.name === "NotFoundError") {
       return res.status(httpStatus.NOT_FOUND).send(error.message)
     }
+    console.log(error.message)
     return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
   }
 }
