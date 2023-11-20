@@ -12,8 +12,18 @@ async function createSale(req: Request, res: Response) {
   }
 }
 
+async function getAllSales(req: Request, res: Response) {
+  try {
+    const sales = await salesService.getAllSales();
+    return res.status(httpStatus.OK).send(sales);
+  } catch(error) {
+    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
 const salesController = {
-  createSale
+  createSale,
+  getAllSales
 }
 
 export default salesController;

@@ -4,8 +4,13 @@ async function createSale(date: Date, value: number) {
   return await salesRepository.createSale(date, value);
 }
 
+async function getAllSales() {
+  return await salesRepository.getAllSales();
+}
+
 const salesService = {
-  createSale
+  createSale,
+  getAllSales
 }
 
 export default salesService

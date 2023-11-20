@@ -9,8 +9,17 @@ async function createSale(date: Date, value: number) {
   })
 }
 
+async function getAllSales() {
+  return prisma.sales.findMany({
+    orderBy: {
+      date: 'desc'
+    }
+  })
+}
+
 const salesRepository = {
-  createSale
+  createSale,
+  getAllSales
 }
 
 export default salesRepository;
