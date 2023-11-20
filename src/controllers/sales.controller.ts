@@ -28,7 +28,20 @@ async function deleteSale(req: Request, res: Response) {
     const sale = await salesService.deleteSale(saleId);
   } catch (error: any) {
     if (error.name === "NotFoundError") {
-      return res.sendStatus(httpStatus.NOT_FOUND);
+      return res.status(httpStatus.NOT_FOUND).send(error.message);
+    }
+    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
+async function updateSale(req: Request, res: Response) {
+  try {
+    const saleId =  parseInt(req.params.id)
+    const { date, value } = req.body
+    const sale = await salesService.updateSale(saleId, date, value);
+  } catch (error: any) {
+    if (error.name === "NotFoundError") {
+      return res.status(httpStatus.NOT_FOUND).send(error.message)
     }
     return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
   }
@@ -37,7 +50,8 @@ async function deleteSale(req: Request, res: Response) {
 const salesController = {
   createSale,
   getAllSales,
-  deleteSale
+  deleteSale,
+  updateSale
 }
 
 export default salesController;

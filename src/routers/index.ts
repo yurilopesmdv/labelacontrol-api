@@ -9,6 +9,6 @@ router
   .get('/sales/month')
   .get('/sales/month/details')
   .delete('/sales/:id', salesController.deleteSale)
-  .put('/sales/:id')
+  .put('/sales/:id', salesController.updateSale)
 
 export default router;

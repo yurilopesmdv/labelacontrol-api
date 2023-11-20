@@ -31,11 +31,22 @@ async function deleteSale(id: number) {
   })
 }
 
+async function updateSale(id: number, date: string, value: number) {
+  return prisma.sales.update({
+    where: {id},
+    data: {
+      date,
+      value
+    }
+  })
+}
+
 const salesRepository = {
   createSale,
   getAllSales,
   getSaleById,
-  deleteSale
+  deleteSale,
+  updateSale
 }
 
 export default salesRepository;
