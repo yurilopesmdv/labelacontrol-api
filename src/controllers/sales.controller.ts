@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 import salesService from "../services/sales.service";
+import { AplicationError } from "../protocols";
 
 async function createSale(req: Request, res: Response) {
   try {
@@ -21,9 +22,22 @@ async function getAllSales(req: Request, res: Response) {
   }
 }
 
+async function deleteSale(req: Request, res: Response) {
+  try {
+    const saleId =  parseInt(req.params.id)
+    const sale = await salesService.deleteSale(saleId);
+  } catch (error: any) {
+    if (error.name === "NotFoundError") {
+      return res.sendStatus(httpStatus.NOT_FOUND);
+    }
+    return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+  }
+}
+
 const salesController = {
   createSale,
-  getAllSales
+  getAllSales,
+  deleteSale
 }
 
 export default salesController;

@@ -8,5 +8,7 @@ router
   .get('/sales/:day')
   .get('/sales/month')
   .get('/sales/month/details')
+  .delete('/sales/:id', salesController.deleteSale)
+  .put('/sales/:id')
 
 export default router;
