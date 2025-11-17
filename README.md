@@ -1,1 +1,2 @@
-teste
+LABELA CONTROL API
+
