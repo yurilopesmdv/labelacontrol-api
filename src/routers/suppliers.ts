@@ -2,8 +2,11 @@ import { Router } from "express";
 import supplierSchema from "../schemas/suppliers";
 import validations from "../middlewares/validateEntries";
 import supplierController from "../controllers/suppliers";
+import { authenticateToken } from "../middlewares/authentication";
 
 const supplierRouter = Router();
+
+supplierRouter.use(authenticateToken);
 
 supplierRouter
   .post(

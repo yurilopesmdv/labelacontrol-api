@@ -5,8 +5,8 @@ import authService from "../services/auth";
 async function signIn(req: Request, res: Response, next: NextFunction) {
   try {
     const { email, password } = req.body;
-    const user = await authService.signIn(email, password);
-    res.status(httpStatus.OK).json({ user });
+    const result = await authService.signIn(email, password);
+    res.status(httpStatus.OK).json(result);
   } catch (error) {
     next(error);
   }

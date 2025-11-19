@@ -1,6 +1,7 @@
 import authRepository from "../repositories/auth";
 import { throwError } from "../errors/customError";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 async function signIn(email: string, password: string) {
   const user = await authRepository.getUserByEmail(email);
@@ -14,7 +15,11 @@ async function signIn(email: string, password: string) {
     throwError(401, "Invalid credentials");
   }
   delete user.password_hash;
-  return user;
+
+  const secret = process.env.JWT_SECRET || "secret";
+  const token = jwt.sign({ userId: user.id }, secret);
+
+  return { token, user };
 }
 
 async function createUser(email: string, password: string, name: string) {

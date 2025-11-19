@@ -3,6 +3,8 @@ import cors from "cors";
 import authRouter from "./routers/auth";
 import customerRouter from "./routers/customers";
 import supplierRouter from "./routers/suppliers";
+import productRouter from "./routers/products";
+import salesRouter from "./routers/sales";
 import { errorHandler } from "./middlewares/errorHandler";
 
 const app = express();
@@ -15,6 +17,8 @@ app.use(cors())
 	.use("/auth", authRouter)
 	.use("/customers", customerRouter)
 	.use("/suppliers", supplierRouter)
+	.use("/products", productRouter)
+	.use("/sales", salesRouter)
 	.use(errorHandler)
 
 export function init(): Promise<Express> {

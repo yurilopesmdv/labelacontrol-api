@@ -2,8 +2,11 @@ import { Router } from "express";
 import customerSchema from "../schemas/customers";
 import validations from "../middlewares/validateEntries";
 import customerController from "../controllers/customers";
+import { authenticateToken } from "../middlewares/authentication";
 
 const customerRouter = Router();
+
+customerRouter.use(authenticateToken);
 
 customerRouter
   .post(
