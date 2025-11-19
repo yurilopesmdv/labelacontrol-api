@@ -19,7 +19,7 @@ async function createUser(email: string, hashedPassword: string, name: string) {
   const pool = getPool();
   try {
     const result = await pool.query(
-    'INSERT INTO users (email, password_hash, name) VALUES ($1, $2, $3) RETURNING id',
+      'INSERT INTO users (email, password_hash, name) VALUES ($1, $2, $3) RETURNING id',
       [email, hashedPassword, name]
     );
     console.log(result.rows[0]);
@@ -29,9 +29,23 @@ async function createUser(email: string, hashedPassword: string, name: string) {
   }
 }
 
+async function getUserById(id: number) {
+  const pool = getPool();
+  try {
+    const result = await pool.query(
+      'SELECT * FROM users WHERE id = $1',
+      [id]
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 const authRepository = {
   getUserByEmail,
-  createUser
+  createUser,
+  getUserById
 }
 
 export default authRepository;

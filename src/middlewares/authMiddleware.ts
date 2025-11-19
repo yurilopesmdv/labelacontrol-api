@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import httpStatus from "http-status";
-import { CustomError } from "../errors/customError";
-import { UserRepository } from "../modules/users/repositories/userRepository";
+import { throwError } from "../errors/customError";
 
-const JWT_SECRET = process.env.JWT_SECRET || "your-super-secret-key";
+import authRepository from "../repositories/auth";
+
+const JWT_SECRET = process.env.JWT_SECRET || "secret";
 
 export async function authenticateToken(
   req: Request,
@@ -14,22 +14,24 @@ export async function authenticateToken(
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
 
-  if (token == null) {
-    return next(new CustomError("Unauthorized", httpStatus.UNAUTHORIZED));
+  if (!token) {
+    throwError(401, "Access denied. No token provided.");
+    return;
   }
 
   try {
-    const payload = jwt.verify(token, JWT_SECRET) as jwt.JwtPayload;
-    const userRepository = new UserRepository();
-    const user = await userRepository.findByEmail(payload.email);
+    const payload = jwt.verify(token, JWT_SECRET) as { userId: number };
 
+    const user = await authRepository.getUserById(payload.userId);
     if (!user) {
-      return next(new CustomError("Unauthorized", httpStatus.UNAUTHORIZED));
+      throwError(401, "Invalid token. User not found.");
+      return;
     }
 
-    req.user = user;
+    // Attach to res.locals as per best practices and to match authentication.ts
+    res.locals.userId = payload.userId;
     next();
   } catch (err) {
-    return next(new CustomError("Forbidden", httpStatus.FORBIDDEN));
+    throwError(401, "Invalid token.");
   }
 }

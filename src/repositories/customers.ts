@@ -28,7 +28,40 @@ async function getAllCustomers() {
 async function getCustomerById(id: number) {
   const pool = getPool();
   try {
-    const result = await pool.query('SELECT * FROM customers WHERE id = $1', [id]);
+    const result = await pool.query(`
+      SELECT 
+        c.*,
+        (
+          SELECT COALESCE(json_agg(
+            json_build_object(
+              'id', s.id,
+              'total_cents', s.total_cents,
+              'created_at', s.created_at,
+              'products', (
+                SELECT COALESCE(json_agg(
+                  json_build_object(
+                    'id', p.id,
+                    'name', p.name,
+                    'sale_price_cents', p.sale_price_cents,
+                    'quantity', sp_counts.qty
+                  )
+                ), '[]'::json)
+                FROM (
+                   SELECT product_id, COUNT(*) as qty
+                   FROM sales_products
+                   WHERE sale_id = s.id
+                   GROUP BY product_id
+                ) sp_counts
+                JOIN products p ON sp_counts.product_id = p.id
+              )
+            )
+          ), '[]'::json)
+          FROM sales s
+          WHERE s.customer_id = c.id
+        ) as sales
+      FROM customers c
+      WHERE c.id = $1
+    `, [id]);
     return result.rows[0];
   } catch (error) {
     console.log(error);
